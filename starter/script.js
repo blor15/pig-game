@@ -21,6 +21,7 @@ diceEl.classList.add('hidden');
 const scores = [0, 0];
 let currentScore = 0;
 let activePlayer = 0;
+let playing = true;
 
 const switchPlayer = () => {
   document.getElementById(`current--${activePlayer}`).textContent = 0;
@@ -32,32 +33,46 @@ const switchPlayer = () => {
 
 //Rolling dice functionality
 btnRoll.addEventListener('click', () => {
-  //Generates a random dice roll between 1 through 6
-  const dice = Math.trunc(Math.random() * 6) + 1;
+  if (playing) {
+    //Generates a random dice roll between 1 through 6
+    const dice = Math.trunc(Math.random() * 6) + 1;
 
-  // Display dice
-  diceEl.classList.remove('hidden');
-  diceEl.src = `dice-${dice}.png`;
+    // Display dice
+    diceEl.classList.remove('hidden');
+    diceEl.src = `dice-${dice}.png`;
 
-  //Checks for a dice roll of 1
-  if (dice !== 1) {
-    //Adds the dice to current score
-    currentScore += dice;
-    document.getElementById(`current--${activePlayer}`).textContent =
-      currentScore;
-  } else {
-    //Switches to the next player if dice rolls a 1
-    switchPlayer();
+    //Checks for a dice roll of 1
+    if (dice !== 1) {
+      //Adds the dice to current score
+      currentScore += dice;
+      document.getElementById(`current--${activePlayer}`).textContent =
+        currentScore;
+    } else {
+      //Switches to the next player if dice rolls a 1
+      switchPlayer();
+    }
   }
 });
 
 btnHold.addEventListener('click', () => {
-  // Adds current score to the activate player's total score
-  scores[activePlayer] += currentScore;
-  document.getElementById(`current--${activePlayer}`).textContent =
-    scores[activePlayer];
-  // Checks if a player's score is >= 100
-  // Finish game
-
+  if (playing) {
+    // Adds current score to the activate player's total score
+    scores[activePlayer] += currentScore;
+    document.getElementById(`score--${activePlayer}`).textContent =
+      scores[activePlayer];
+    // Checks if a player's score is >= 100
+    if (scores[activePlayer] >= 100) {
+      // Finish game
+      playing = false;
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.add('player--winner');
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.remove('player--active');
+    } else {
+      switchPlayer();
+    }
+  }
   //Reset the game
 });
