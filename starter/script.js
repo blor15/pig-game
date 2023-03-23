@@ -1,6 +1,8 @@
 'use strict';
 
 // Selecting elements
+const player0el = document.querySelector('.player--1');
+const player1el = document.querySelector('.player--0');
 const score0El = document.querySelector('#score--0');
 //Getting an element by ID which is equal to the above example as well
 const score1El = document.getElementById('score--1');
@@ -16,7 +18,9 @@ score0El.textContent = 0;
 score1El.textContent = 0;
 diceEl.classList.add('hidden');
 
+const scores = [0, 0];
 let currentScore = 0;
+let activePlayer = 0;
 
 //Rolling dice functionality
 btnRoll.addEventListener('click', () => {
@@ -31,8 +35,14 @@ btnRoll.addEventListener('click', () => {
   if (dice !== 1) {
     //Adds the dice to current score
     currentScore += dice;
-    current0El.textContent = currentScore;
+    document.getElementById(`current--${activePlayer}`).textContent =
+      currentScore;
   } else {
     //Switches to the next player if dice rolls a 1
+    document.getElementById(`current--${activePlayer}`).textContent = 0;
+    currentScore = 0;
+    activePlayer = activePlayer === 0 ? 1 : 0;
+    player0el.classList.toggle('player--active');
+    player1el.classList.toggle('player--active');
   }
 });
